@@ -1,13 +1,146 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Charity Water Game</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#fffefa">
+  <meta name="description" content="Dig a path through the earth and guide clean water into a charity: water jerry can.">
+  <title>Water Works | charity: water</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
 </head>
 <body>
-    <h1>Welcome to the Charity Water Game Prototype</h1>
-    <script src="script.js"></script>
+  <header class="site-header">
+    <a class="brand" href="./" aria-label="charity: water game home">
+      <img src="img/cw_logo_horizontal.png" alt="charity: water">
+    </a>
+    <span class="header-note">A little game for a big cause</span>
+  </header>
+
+  <main class="game-layout">
+    <section class="intro" aria-labelledby="game-title">
+      <p class="eyebrow"><span class="eyebrow-dot"></span> THE CLEAN WATER CHALLENGE</p>
+      <h1 id="game-title">Make a <span>path.</span></h1>
+      <p class="intro-copy">There’s water underground! Dig through the dirt and guide it into the yellow jerry can.</p>
+
+      <div class="score-card" aria-label="Water collected">
+        <div>
+          <p class="score-label">WATER IN YOUR CAN</p>
+          <p class="score-number"><span id="score">0</span><span class="score-total"> / 10 drops</span></p>
+        </div>
+        <div class="score-icon" aria-hidden="true">💧</div>
+      </div>
+
+      <div class="how-to">
+        <h2>How to play</h2>
+        <p><span class="instruction-icon" aria-hidden="true">👆</span> Press and drag through dirt to dig a path.</p>
+        <p><span class="instruction-icon water-icon" aria-hidden="true">💧</span> Water flows downhill into the can.</p>
+        <p><span class="instruction-icon rock-icon" aria-hidden="true">●</span> Rocks are solid. Dig around them!</p>
+      </div>
+    </section>
+
+    <section class="game-card" aria-label="Water Works puzzle">
+      <div class="game-topbar">
+        <div class="level-label"><span class="level-dot"></span> LEVEL 01 <span class="level-divider">/</span> FIND THE FLOW</div>
+        <button class="reset-button" id="resetButton" type="button">
+          <span aria-hidden="true">↻</span> Reset
+        </button>
+      </div>
+
+      <div class="game-scene" id="gameScene">
+        <div class="scene-caption" aria-hidden="true">DIG A CHANNEL TO THE JERRY CAN</div>
+        <div class="game-board" id="gameBoard" role="application" aria-label="Draw a tunnel from the water spring to the yellow jerry can. Press and drag to dig.">
+          <svg class="landscape" viewBox="0 0 720 500" preserveAspectRatio="none" aria-hidden="true">
+            <defs>
+              <linearGradient id="skyGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#c5e9f5"></stop>
+                <stop offset="100%" stop-color="#eff5df"></stop>
+              </linearGradient>
+              <linearGradient id="soilGradient" x1="0" y1="0" x2="0.8" y2="1">
+                <stop offset="0%" stop-color="#b97c4c"></stop>
+                <stop offset="42%" stop-color="#9b633f"></stop>
+                <stop offset="100%" stop-color="#76492f"></stop>
+              </linearGradient>
+              <linearGradient id="waterGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#a3e7ff"></stop>
+                <stop offset="35%" stop-color="#43b9f7"></stop>
+                <stop offset="100%" stop-color="#1682d1"></stop>
+              </linearGradient>
+              <pattern id="soilTexture" width="46" height="38" patternUnits="userSpaceOnUse">
+                <circle cx="7" cy="10" r="1.7" fill="#e4b17b" opacity=".48"></circle>
+                <circle cx="29" cy="7" r="1.1" fill="#5e3828" opacity=".3"></circle>
+                <ellipse cx="35" cy="26" rx="3" ry="1.5" fill="#63402c" opacity=".23"></ellipse>
+                <circle cx="15" cy="32" r="1.1" fill="#e8c092" opacity=".3"></circle>
+                <path d="M1 23l4-2m27 8 3-2" stroke="#6e472f" stroke-width="1" opacity=".22"></path>
+              </pattern>
+              <clipPath id="earthClip">
+                <path d="M0 206 Q74 191 137 204 T268 201 Q335 183 399 198 T523 196 Q633 178 720 199 L720 500 L0 500Z"></path>
+              </clipPath>
+            </defs>
+            <rect width="720" height="500" fill="url(#skyGradient)"></rect>
+            <circle cx="624" cy="83" r="31" fill="#ffd84f" opacity=".95"></circle>
+            <circle cx="624" cy="83" r="43" fill="#ffd84f" opacity=".15"></circle>
+            <g class="scene-cloud" fill="#fff" opacity=".8">
+              <ellipse cx="240" cy="88" rx="36" ry="12"></ellipse>
+              <circle cx="224" cy="82" r="15"></circle>
+              <circle cx="244" cy="75" r="20"></circle>
+              <circle cx="263" cy="84" r="14"></circle>
+            </g>
+            <path d="M0 205 Q74 190 137 203 T268 200 Q335 182 399 197 T523 195 Q633 177 720 198" fill="none" stroke="#719c53" stroke-width="11" stroke-linecap="round"></path>
+            <path d="M0 211 Q74 196 137 209 T268 206 Q335 188 399 203 T523 201 Q633 183 720 204" fill="none" stroke="#a9c879" stroke-width="5" stroke-linecap="round"></path>
+            <g class="grass-tufts" stroke="#588446" stroke-width="3" stroke-linecap="round">
+              <path d="M41 200l-3-9m3 9 5-8m87 10-2-8m2 8 5-7m170-2-4-8m4 8 5-9m143 11-3-8m3 8 5-9m138-7-2-9m2 9 5-8m85 8-4-8m4 8 5-7"></path>
+            </g>
+            <path d="M0 206 Q74 191 137 204 T268 201 Q335 183 399 198 T523 196 Q633 178 720 199 L720 500 L0 500Z" fill="url(#soilGradient)"></path>
+            <rect class="soil-pattern" x="0" y="190" width="720" height="310" fill="url(#soilTexture)" clip-path="url(#earthClip)"></rect>
+            <path d="M0 330 Q182 315 339 332 T720 324M0 435 Q188 420 365 437 T720 430" fill="none" stroke="#63432f" stroke-width="3" opacity=".2"></path>
+            <g class="spring" transform="translate(112 196)">
+              <path d="M-14 1v-15q0-7 7-7h14q7 0 7 7V1" fill="#e8ece2" stroke="#728d84" stroke-width="3"></path>
+              <path d="M-17 2h34" stroke="#657d73" stroke-width="5" stroke-linecap="round"></path>
+              <path d="M0 2v8" stroke="#36aef1" stroke-width="5" stroke-linecap="round"></path>
+              <circle cx="0" cy="13" r="3" fill="#a3e7ff"></circle>
+            </g>
+            <path id="dugPath" class="dug-path"></path>
+            <path id="waterPath" class="water-path"></path>
+            <path id="activePath" class="active-path"></path>
+            <g class="scene-rock" transform="translate(355 307)">
+              <path d="M-29 13l-8-18 12-22 22-9 22 13 7 22-16 18-22 4z" fill="#7b7972" stroke="#615d55" stroke-width="4" stroke-linejoin="round"></path>
+              <path d="M-20-6l9-14 13-4" fill="none" stroke="#b9b3a8" stroke-width="4" stroke-linecap="round" opacity=".7"></path>
+            </g>
+          </svg>
+          <div class="jerry-can" id="jerryCan" role="img" aria-label="Yellow charity: water jerry can">
+            <div class="can-handle"></div>
+            <div class="can-spout"><span class="spout-opening"></span></div>
+            <div class="can-body">
+              <div class="can-water" id="canWater"></div>
+              <div class="can-mark">
+                <span class="mark-line mark-one"></span>
+                <span class="mark-line mark-two"></span>
+                <span class="mark-line mark-three"></span>
+                <span class="mark-line mark-four"></span>
+                <span class="mark-center"></span>
+              </div>
+              <div class="can-highlight"></div>
+            </div>
+            <div class="can-base"></div>
+          </div>
+          <span class="source-label" aria-hidden="true">WATER SPRING</span>
+          <span class="can-label" aria-hidden="true">YOUR JERRY CAN</span>
+        </div>
+      </div>
+
+      <div class="game-footer">
+        <p class="game-message" id="gameMessage" aria-live="polite">Press and drag through the dirt to start digging!</p>
+        <div class="progress-track" role="progressbar" aria-label="Jerry can fill level" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0" id="progressTrack">
+          <span class="progress-fill" id="progressFill"></span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>charity: water brings clean and safe water to people in need.</p>
+    <span>PLAY. LEARN. MAKE WAVES.</span>
+  </footer>
 </body>
 </html>
